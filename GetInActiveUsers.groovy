@@ -26,10 +26,12 @@ import org.apache.log4j.Logger
 import org.apache.log4j.Level
 
 
-def crowdService = ComponentAccessor.getComponent(CrowdService)
+// CONFIGURATIONS
+def numOfDays = 100 // Number of days the user was not logged in 
+// END OF CONFIGURATIONS
 
-// Number of days the user was not logged in Date
-def numOfDays = 100
+
+def crowdService = ComponentAccessor.getComponent(CrowdService)
 def dateLimit = LocalDateTime.now().minusDays(numOfDays)
 
 // set logging to Jira log
@@ -69,11 +71,14 @@ allActiveUsers.each {
 
 
 if (!InACtiveUsers) {
-	log.debug("Nothing matched")
-	return 'No Idle users found'
+	log.debug("Nothing matched, all users have logged in during last $numOfDays days")
 }
 
-
-InACtiveUsers.each {
-	log.debug("USER: $it")
+else {
+	log.debug("------Users who havent logged in $numOfDays days-----------")
+	i=0
+	InACtiveUsers.each {
+	log.debug("USER $i: $it")
+	i=i+1
+	}
 }
